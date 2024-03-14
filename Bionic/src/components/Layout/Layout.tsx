@@ -8,7 +8,7 @@ const Layout = () => {
     <div className='flex h-full w-full'>
         <div className='flex flex-col h-full w-full'>
             <Navbar />
-            <div className='flex w-full px-6 py-2 gap-2 h-[calc(100vh_-_40px)] overflow-hidden'>
+            <div className='flex w-full px-4 py-2 gap-4 h-[calc(100vh_-_40px)] overflow-hidden'>
                 <Sidebar />
                 <div className='flex w-full overflow-auto h-full'>
                     <Outlet />

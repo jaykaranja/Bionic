@@ -7,7 +7,7 @@ const Navigator = () => {
   const history = useHistoryStack()
   return (
     <div className='flex'>
-        <div className={`p-2 bg-secondary text-light rounded-full ${history.length > 0 ? "hover:cursor-pointer" : "hover:cursor-not-allowed"}`}>
+        <div className={`p-2 bg-secondary/50 transition text-light rounded-full ${history.length > 0 ? "hover:cursor-pointer hover:bg-secondary" : "hover:cursor-not-allowed"}`}>
             <FaAngleLeft 
               onClick={() => {
                 history.length > 0 && navigate(-1)

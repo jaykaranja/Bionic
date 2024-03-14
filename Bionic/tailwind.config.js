@@ -11,7 +11,8 @@ export default {
         secondary: "#444444",
         dark: "#171717",
         light: "#EDEDED",
-        success: "#06992d"
+        success: "#06992d",
+        lime: "#0bcbcb"
       },
     },
   },

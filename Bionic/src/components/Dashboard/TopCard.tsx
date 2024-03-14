@@ -14,11 +14,11 @@ function TopCard(props: Props) {
                 className="h-full w-full rounded-xl shadow-lg hover:-translate-x-2 transition-all duration-150"
             />
         </div>
-        <div className="z-30 absolute h-full w-full flex items-end justify-between px-4 py-4">
-            <p className="text-white font-semibold text-lg">
+        <div className="z-30 absolute h-full w-full flex items-end justify-between px-6 py-4">
+            <p className="text-white font-semibold text-xl pb-2">
                 {props.title}
             </p>
-            <div className="rounded-full p-4 bg-[#0bcbcb] hover:bg-[#0bcbcbb4] transition duration-300">
+            <div className="rounded-full shadow-xl p-4 bg-[#0bcbcb] hover:bg-[#0bcbcbb4] transition duration-300">
                 <FaPlay color="black"/>
             </div>
         </div>

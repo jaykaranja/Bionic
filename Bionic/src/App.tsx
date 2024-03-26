@@ -6,6 +6,13 @@ import Home from "./pages/Home/Home";
 import Layout from "./components/Layout/Layout";
 import SignIn from "./pages/Authentication/SignIn";
 import SignUp from "./pages/Authentication/SignUp";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import GenreDetails from "./pages/Details/GenreDetails";
+import LikedDetails from "./pages/Details/LikedDetails";
+import ArtistDetails from "./pages/Details/ArtistDetails";
+import AlbumDetails from "./pages/Details/AlbumDetails";
+
+const queryClient = new QueryClient()
 
 function App() {
 
@@ -31,12 +38,59 @@ function App() {
           }
         ]
       },
+      {
+        path: "genres",
+        children: [
+          {
+            path: ":genre_id",
+            element: <GenreDetails />
+          }
+        ]
+      },
+      {
+        path: "liked-songs",
+        children: [
+          {
+            path: "",
+            element: <LikedDetails />
+          }
+        ]
+      },
+      {
+        path: "playlist",
+        children: [
+          {
+            path: ":playlist_id",
+            element: <GenreDetails />
+          }
+        ]
+      },
+      {
+        path: "artist",
+        children: [
+          {
+            path: ":artist_id",
+            element: <ArtistDetails />
+          }
+        ]
+      },
+      {
+        path: "album",
+        children: [
+          {
+            path: ":album_id",
+            element: <AlbumDetails />
+          }
+        ]
+      },
     ]
   },
 ]);
 
   return (
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   )
 }
 

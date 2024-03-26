@@ -36,7 +36,7 @@ const GenreDetails = () => {
             </div>
         </div>
         <div className="flex gap-4 gap-x-3 flex-wrap w-full h-full overflow-auto" id="scrollbar">
-            {(genre.data?.songs?.length ?? 0 > 0) && 
+            {((genre.data?.songs?.length > 0) && Array.isArray(genre.data?.songs)) &&
               genre.data?.songs?.map((song: Song) => 
                 (
                   <div className="shadow-md w-full px-6 py-4 h-24 flex items-center justify-between rounded-lg relative hover:cursor-pointer hover:bg-bgSecondary hover:shadow-xl transition duration-200 bg-bgSecondary/85">

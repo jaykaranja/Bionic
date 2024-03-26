@@ -10,6 +10,8 @@ const Home = () => {
     queryKeys: ['genres', 'all'],
     url:  "genres"
   });
+
+  console.log(genres.data)
   return (
     <div className='w-full h-full flex flex-col gap-6 rounded-xl p-4 relative'>
         <div className="flex items-center gap-4">
@@ -19,8 +21,8 @@ const Home = () => {
           <p className="bg-secondary/50 px-4 py-1 font-semibold rounded-2xl hover:bg-secondary hover: cursor-pointer transition text-sm text-lime h-full flex items-center">Favorites</p>
         </div>
         <div className="flex gap-4 gap-x-3 flex-wrap w-full h-full overflow-auto " id="scrollbar">
-            {(genres.data && genres.isSuccess) && 
-              genres.data.map((genre: Genre) => {
+            {(genres.data && genres.isSuccess && Array.isArray(genres.data)) && 
+              genres.data?.map((genre: Genre) => {
                 return (
                   <div className="shadow-md aspect-square h-[200px] flex items-end rounded-lg relative">
                     <TopCard 

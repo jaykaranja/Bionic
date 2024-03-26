@@ -5,16 +5,16 @@ import { useNavigate } from "react-router-dom";
 type Props = {
     title: string;
     imageUrl: string
-    genre_id: number
+    guid: number
 }
 
 function TopCard(props: Props) {
     const navigate = useNavigate();
-    const handleRedirect = useCallback((id:number) => {
-        navigate("genres/" + id);
+    const handleRedirect = useCallback((guid:string) => {
+        navigate("genres/" + guid);
     }, [navigate])
   return (
-    <div onClick={() => handleRedirect(props.genre_id)} className="w-full h-full font-semibold text-lg rounded-md hover:cursor-pointer">
+    <div onClick={() => handleRedirect(props.guid)} className="w-full h-full font-semibold text-lg rounded-md hover:cursor-pointer">
         <div className="absolute w-full h-full bg-black">
             <img 
                 src={props.imageUrl}

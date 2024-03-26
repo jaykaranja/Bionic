@@ -28,7 +28,7 @@ const Home = () => {
                     <TopCard 
                       title={genre.name}
                       imageUrl={"http://localhost:8000" + genre.cover_image}
-                      genre_id={genre.id}
+                      guid={genre.guid}
                     />
                   </div>
                 )

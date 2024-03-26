@@ -41,8 +41,8 @@ const GenreDetails = () => {
                 (
                   <div className="shadow-md w-full px-6 py-4 h-24 flex items-center justify-between rounded-lg relative hover:cursor-pointer hover:bg-bgSecondary hover:shadow-xl transition duration-200 bg-bgSecondary/85">
                     <div className='flex gap-4'>
-                      <div className="rounded-full flex items-center justify-center shadow-xl p-4 bg-[#0bcbcb] hover:bg-[#0bcbcbb4] transition duration-300">
-                          <FaPlay color="black" size={20}/>
+                      <div className="rounded-full aspect-square w-14 flex items-center justify-center shadow-xl p-2 bg-[#0bcbcb] hover:bg-[#0bcbcbb4] transition duration-300">
+                          <FaPlay color="black" size={22}/>
                       </div>
                       <div className='flex flex-col gap-2 self-end'>
                         <p className='text-lime'>{song.artist_name}</p>

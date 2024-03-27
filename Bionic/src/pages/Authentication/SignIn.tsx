@@ -16,7 +16,7 @@ const SignIn = ({
     })
 
     const handleSignIn = useCallback(() => {
-        axios.post('http://localhost:8000/api/token/', creds).then(response => {
+        axios.post((process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL) + '/api/token/', creds).then(response => {
             localStorage.setItem("token", response.data.token)
             navigate("/")
         }).catch(error => {

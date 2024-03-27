@@ -11,6 +11,7 @@ import GenreDetails from "./pages/Details/GenreDetails";
 import LikedDetails from "./pages/Details/LikedDetails";
 import ArtistDetails from "./pages/Details/ArtistDetails";
 import AlbumDetails from "./pages/Details/AlbumDetails";
+import Landing from "./pages/Home/Landing";
 
 const queryClient = new QueryClient()
 
@@ -83,8 +84,12 @@ function App() {
           }
         ]
       },
-    ]
+    ],
   },
+  {
+    path: "/home",
+    element: <Landing />
+  }
 ]);
 
   return (

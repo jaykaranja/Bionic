@@ -11,6 +11,12 @@ from .serializers import SongSerializer, GenreSerializer, FavoriteSongSerializer
 from .lookupenums import Lookups
 
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user(request):
+    return Response(status=200)
+
 # music/views.py
 @api_view(['GET'])
 def list_songs_by_genre(request):

@@ -4,12 +4,17 @@ import TopCard from "../../components/Dashboard/TopCard"
 import Navigator from "../../components/Shared/Navigator/Navigator"
 import { Genre } from '../../types/Genre';
 import { FaPlus } from "react-icons/fa";
+import usePortalView from "../../hooks/usePortalView";
+import Modal from "../../components/modals/Modal.jsx"
+import SongForm from "../../components/Forms/SongForm";
 
 const Home = () => {
   const genres: UseQueryResult<Genre[]> = useGetData({
     queryKeys: ['genres', 'all'],
     url:  "genres"
   });
+
+  const formState = usePortalView()
 
   console.log(genres.data)
   return (
@@ -35,9 +40,16 @@ const Home = () => {
               })
             }
         </div>
-        <div className="absolute bottom-2 right-12 bg-lime rounded-full p-6">
+        <div className="absolute bottom-2 right-12 bg-lime rounded-full p-6" onClick={formState.toggle}>
             <FaPlus color="black" size={20} />
         </div>
+        {formState.isOpen && (
+          <Modal>
+            <SongForm 
+              onClose={formState.toggle}
+            />
+          </Modal>
+        )}
     </div>
   )
 }

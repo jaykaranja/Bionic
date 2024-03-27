@@ -1,10 +1,27 @@
+import { useEffect } from 'react'
 import Player from '../Player/Player'
 import Navbar from './Navbar/Navbar'
 import Sidebar from './Sidebar/Sidebar'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
+import axiosService from '../../apis/apiService'
 
 
 const Layout = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const res = async () => {
+      axiosService().get("/api/me").then(res => {
+        console.log("Authenticated.")
+      }).catch(error => {
+        if (error.response.status === 401) {
+          navigate("/home");
+        }
+      })
+    }
+
+    res();
+  }, [])
+
   return (
     <div className='flex h-full w-full flex-col relative'>
         <div className='flex flex-col h-full w-full'>
@@ -16,7 +33,9 @@ const Layout = () => {
                 </div>
             </div>
         </div>
-        <Player />
+        <Player 
+
+        />
     </div>
   )
 }

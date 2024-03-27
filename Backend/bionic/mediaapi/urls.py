@@ -2,6 +2,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+
+    # Authentication
+    path('api/me', views.get_user),
+
+
     # Genres
     path('genres/create', views.create_genre),
     path('genres', views.list_songs_by_genre),

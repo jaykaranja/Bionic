@@ -15,12 +15,20 @@ class GenreLookupSerializer(serializers.ModelSerializer):
 class ArtistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artist
-        fields = ['name', 'guid']  # Include only the name field
+        fields = ['name', 'guid',  'cover_image' ]  # Include only the name field
 
 class AlbumSerializer(serializers.ModelSerializer):
     class Meta:
         model = Album
         fields = ['title', 'guid']  # Include only the name field
+
+class AlbumListSerializer(serializers.ModelSerializer):
+    artistName = serializers.CharField(source='artist.name', read_only=True, required=False, allow_null=True)
+
+    class Meta:
+        model = Album
+        fields = [ 'guid', 'title', 'artistName', 'artist', 'cover_image' ]
+
 
 class SongSerializer(serializers.ModelSerializer):
     genre = serializers.CharField(source='genre.name', read_only=True, required=False, allow_null=True)
@@ -29,6 +37,10 @@ class SongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
         fields = ['guid', 'title', 'audio_file', 'genre', 'artist', 'artist_name']  # Include artist_name
+
+    class Form:
+        model: Song
+        fields = ['title', 'audio_file', 'genre', 'artist', 'album']
 
 class FavoriteSongSerializer(serializers.ModelSerializer):
     song = SongSerializer()  # Include the related song details in the serialized data

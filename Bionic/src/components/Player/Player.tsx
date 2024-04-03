@@ -1,8 +1,9 @@
 import { FaPlay, FaHeart } from 'react-icons/fa'
 import { MdPause, MdSkipNext, MdSkipPrevious } from "react-icons/md";
 import RockImage from '../../assets/rock.jpg'
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import axiosService from '../../apis/apiService';
+import { useMusicPlayer } from '../../contexts/MusicPlayerContext';
 
 type Props = {
     songUrl: string;
@@ -13,17 +14,21 @@ type Props = {
     artist: {
         name: string;
         artistURL: string;
-    }
+    };
+    handlePlay: any;
+    handlePause: any
 };
 
-const Player = ({ songUrl = "http://localhost:8000/media/songs/y2mate.com_-_Slow_Dancing_In_A_Burning_Room_Live_in_LA_TEyuQ2i.mp3" }: Props) => {
+const Player = () => {
     const audioRef = useRef<HTMLAudioElement>(null);
     const [liked, setLiked] = useState<boolean>(false);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [currentTime, setCurrentTime] = useState<number>(0);
     const [duration, setDuration] = useState<number>(0);
+    const { state, pauseTrack } = useMusicPlayer();
 
-    const togglePlay = () => {
+
+    const togglePlay = useCallback(() => {
         if (audioRef.current) {
             if (isPlaying) {
                 audioRef.current.pause();
@@ -32,7 +37,7 @@ const Player = ({ songUrl = "http://localhost:8000/media/songs/y2mate.com_-_Slow
             }
             setIsPlaying(!isPlaying);
         }
-    };
+    }, [isPlaying]);
 
     const handleTimeUpdate = () => {
         if (audioRef.current) {
@@ -58,16 +63,20 @@ const Player = ({ songUrl = "http://localhost:8000/media/songs/y2mate.com_-_Slow
         } catch (error) {
           console.error('Error:', error); // Handle error
         }
-      };
-      
+      };      
+
+    useEffect(() => {
+        audioRef.current.play();
+        setIsPlaying(true)
+    }, [state])
 
     return (
         <div className='w-full bg-bgSecondary h-28 px-4 py-4 flex flex-1 items-center justify-between'>
             <div className='flex gap-4 h-full items-center w-full'>
                 <img src={RockImage} className='h-full aspect-square'/>
                 <div className='w-max max-w-[50%] h-max flex flex-col gap-2 justify-center'>
-                    <p className='text-white text-sm font-bold tracking-wide'>Kissing You</p>
-                    <p className='text-gray-300 text-sm font-semibold tracking-wide'>Total</p>
+                    <p className='text-white text-sm font-bold tracking-wide'>{state.currentTrack?.title}</p>
+                    <p className='text-gray-300 text-sm font-semibold tracking-wide'>{state.currentTrack?.artist_name}</p>
                 </div>
                 <FaHeart onClick={likeSong} className={`cursor-pointer ${liked ? "animate-pulse text-red-700" : "text-gray-400" } ml-4`} size={20} fontSize={10} />
             </div>
@@ -150,7 +159,7 @@ const Player = ({ songUrl = "http://localhost:8000/media/songs/y2mate.com_-_Slow
             {/* Audio element for playing the song */}
             <audio
                 ref={audioRef}
-                src={songUrl}
+                src={(process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL) + state.currentTrack?.audio_file}
                 onTimeUpdate={handleTimeUpdate}
                 onLoadedMetadata={handleLoadedMetadata}
             />

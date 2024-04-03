@@ -13,6 +13,8 @@ class Genre(models.Model):
 class Artist(models.Model):
     guid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
+    cover_image = models.ImageField(upload_to='artist_covers/', null=True, blank=True)
+
     # Add other artist fields as needed
     def __str__(self) -> str:
         return self.name
@@ -22,7 +24,7 @@ class Album(models.Model):
     title = models.CharField(max_length=100)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
-    cover_image = models.ImageField(upload_to='genre_covers/', null=True, blank=True)
+    cover_image = models.ImageField(upload_to='album_covers/', null=True, blank=True)
 
     # Add other album fields as needed
     def __str__(self) -> str:

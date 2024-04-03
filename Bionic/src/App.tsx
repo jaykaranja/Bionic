@@ -12,6 +12,9 @@ import LikedDetails from "./pages/Details/LikedDetails";
 import ArtistDetails from "./pages/Details/ArtistDetails";
 import AlbumDetails from "./pages/Details/AlbumDetails";
 import Landing from "./pages/Home/Landing";
+import { Toaster } from "react-hot-toast";
+import PlaylistDetails from "./pages/Details/PlaylistDetails";
+import AlbumByID from "./pages/Details/AlbumByID";
 
 const queryClient = new QueryClient()
 
@@ -67,7 +70,8 @@ function App() {
         ]
       },
       {
-        path: "artist",
+        path: "artists",
+        element: <ArtistDetails />,
         children: [
           {
             path: ":artist_id",
@@ -76,11 +80,24 @@ function App() {
         ]
       },
       {
-        path: "album",
+        path: "albums",
         children: [
           {
-            path: ":album_id",
+            path: "",
             element: <AlbumDetails />
+          },
+          {
+            path: ":album_id",
+            element: <AlbumByID />
+          }
+        ]
+      },
+      {
+        path: "playlists",
+        children: [
+          {
+            path: ":playlist_id",
+            element: <PlaylistDetails />
           }
         ]
       },
@@ -95,6 +112,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
+      <Toaster />
     </QueryClientProvider>
   )
 }

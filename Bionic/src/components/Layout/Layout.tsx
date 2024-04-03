@@ -1,29 +1,42 @@
-import { useEffect } from 'react'
-import Player from '../Player/Player'
-import Navbar from './Navbar/Navbar'
-import Sidebar from './Sidebar/Sidebar'
-import { Outlet, useNavigate } from 'react-router-dom'
-import axiosService from '../../apis/apiService'
-
+import React, { useCallback, useEffect } from 'react';
+import Player from '../Player/Player';
+import Navbar from './Navbar/Navbar';
+import Sidebar from './Sidebar/Sidebar';
+import { Outlet, useNavigate } from 'react-router-dom';
+import axiosService from '../../apis/apiService';
+import { MusicPlayerProvider, useMusicPlayer } from '../../contexts/MusicPlayerContext';
 
 const Layout = () => {
   const navigate = useNavigate();
+  const { playTrack, pauseTrack } = useMusicPlayer();
+
+  const handlePlay = useCallback((url) => {
+    playTrack(url);
+  }, [playTrack]);
+
+  const handlePause = useCallback(() => {
+    pauseTrack();
+  }, [pauseTrack]);
+
+
   useEffect(() => {
     const res = async () => {
-      axiosService().get("/api/me").then(res => {
-        console.log("Authenticated.")
-      }).catch(error => {
+      try {
+        await axiosService().get("/api/me");
+        console.log("Authenticated.");
+      } catch (error) {
         if (error.response.status === 401) {
           navigate("/home");
         }
-      })
-    }
+      }
+    };
 
     res();
-  }, [])
+  }, [navigate]);
 
   return (
-    <div className='flex h-full w-full flex-col relative'>
+    <MusicPlayerProvider>
+      <div className='flex h-full w-full flex-col relative'>
         <div className='flex flex-col h-full w-full'>
             <Navbar />
             <div className='flex w-full px-4 py-2 gap-4 h-[calc(100vh_-_190px)] overflow-hidden'>
@@ -34,10 +47,12 @@ const Layout = () => {
             </div>
         </div>
         <Player 
-
+          handlePlay={handlePlay}
+          handlePause={handlePause}
         />
-    </div>
-  )
-}
+      </div>
+    </MusicPlayerProvider>
+  );
+};
 
-export default Layout
+export default Layout;

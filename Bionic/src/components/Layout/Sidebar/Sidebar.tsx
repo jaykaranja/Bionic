@@ -23,15 +23,15 @@ const Sidebar = () => {
                 <FaHeart size={20}  color="red" />
                 Liked songs
             </button> 
-            <button className='flex text-lime py-1 px-2 gap-2 items-center rounded-md hover:underline w-full'>
+            <button onClick={() => navigate('/artists')} className='flex text-lime py-1 px-2 gap-2 items-center rounded-md hover:underline w-full'>
                 <FaUser size={20} color="purple" />
                 Artists
             </button> 
-            <button className='flex text-lime py-1 px-2 gap-2 items-center rounded-md hover:underline w-full'>
+            <button onClick={() => navigate('/albums')} className='flex text-lime py-1 px-2 gap-2 items-center rounded-md hover:underline w-full'>
                 <FaCompactDisc size={20} color="grey" />
                 Albums
             </button> 
-            <button className='flex text-lime py-1 px-2 gap-2 items-center rounded-md hover:underline w-full'>
+            <button onClick={() => navigate('/playlist')} className='flex text-lime py-1 px-2 gap-2 items-center rounded-md hover:underline w-full'>
                 <BsMusicNoteList size={20} color="yellow" />
                 Playlists
             </button> 

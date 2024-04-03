@@ -1,10 +1,12 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { Genre } from '../../types/Genre';
 import { Song } from '../../types/Song';
-import { FaPlay } from 'react-icons/fa';
+import { FaPlay, FaPlus } from 'react-icons/fa';
 import useGetData from '../../apis/useGetData';
+import { useMusicPlayer } from '../../contexts/MusicPlayerContext';
+import usePortalView from '../../hooks/usePortalView';
+import GenreForm from '../../components/Forms/GenreForm';
+import Modal from '../../components/modals/Modal'
 
 type TParams = {
     genre_id: string
@@ -17,15 +19,18 @@ const GenreDetails = () => {
       url: `api/genres/${genre_id}`
     })
 
-    
+    const { playTrack, pauseTrack } = useMusicPlayer();
+
+    const formState = usePortalView()
+
 
   return (
-    <div className='flex flex-col gap-6 px-2 w-full'>
+    <div className='flex flex-col gap-6 px-2 w-full relative'>
         <div className='flex gap-4 items-end'>
             <div className='h-[200px] w-[200px] rounded-xl shadow-lg'>
               {genre.data?.cover_image && (
                 <img 
-                  src={"http://localhost:8000" + genre.data?.cover_image}
+                  src={(process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL) + genre.data?.cover_image}
                   className="h-full w-full rounded-xl shadow-lg"
                 />
               )}
@@ -42,7 +47,11 @@ const GenreDetails = () => {
                   <div className="shadow-md w-full px-6 py-4 h-24 flex items-center justify-between rounded-lg relative hover:cursor-pointer hover:bg-bgSecondary hover:shadow-xl transition duration-200 bg-bgSecondary/85">
                     <div className='flex gap-4'>
                       <div className="rounded-full aspect-square w-14 flex items-center justify-center shadow-xl p-2 bg-[#0bcbcb] hover:bg-[#0bcbcbb4] transition duration-300">
-                          <FaPlay color="black" size={22}/>
+                          <FaPlay 
+                            color="black" 
+                            size={22}
+                            onClick={() => playTrack(song)}
+                          />
                       </div>
                       <div className='flex flex-col gap-2 self-end'>
                         <p className='text-lime'>{song.artist_name}</p>
@@ -57,6 +66,16 @@ const GenreDetails = () => {
                 )
             }
         </div>
+        <div className="absolute bottom-2 right-12 bg-lime rounded-full p-6" onClick={formState.toggle}>
+            <FaPlus color="black" size={20} />
+        </div>
+        {formState.isOpen && (
+          <Modal>
+            <GenreForm 
+              onClose={formState.toggle}
+            />
+          </Modal>
+        )}
     </div>
   )
 }

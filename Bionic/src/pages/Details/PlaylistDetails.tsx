@@ -9,7 +9,7 @@ type TParams = {
     genre_id: string
 }
 
-const GenreDetails = () => {
+const PlaylistDetails = () => {
     const { genre_id }:TParams = useParams();
     const queryClient = useQueryClient()
     const genrefromcache:Genre[] | undefined = queryClient.getQueryData(["genres", "all"]);
@@ -21,7 +21,7 @@ const GenreDetails = () => {
     <div className='flex flex-col gap-6 px-2 w-full'>
         <div className='flex gap-4 items-end'>
             <img 
-                src={"http://localhost:8000" + genre?.cover_image}
+                src={(process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL) + genre?.cover_image}
                 className="h-[200px] w-[200px] rounded-xl shadow-lg"
             />
             <div className='flex flex-col gap-4'>
@@ -55,4 +55,4 @@ const GenreDetails = () => {
   )
 }
 
-export default GenreDetails
+export default PlaylistDetails

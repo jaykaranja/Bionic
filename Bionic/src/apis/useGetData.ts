@@ -7,7 +7,6 @@ interface Props {
 
 }
 
-
 const useGetData = ({ queryKeys, url, ...props } : Props) => {
     const response = useQuery({
         ...props,

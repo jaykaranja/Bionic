@@ -7,6 +7,7 @@ import { FaPlus } from "react-icons/fa";
 import usePortalView from "../../hooks/usePortalView";
 import Modal from "../../components/modals/Modal.jsx"
 import SongForm from "../../components/Forms/SongForm";
+import { useMusicPlayer } from "../../contexts/MusicPlayerContext.js";
 
 const Home = () => {
   const genres: UseQueryResult<Genre[]> = useGetData({
@@ -16,7 +17,7 @@ const Home = () => {
 
   const formState = usePortalView()
 
-  console.log(genres.data)
+  const { state, playTrack, pauseTrack } = useMusicPlayer();
   return (
     <div className='w-full h-full flex flex-col gap-6 rounded-xl p-4 relative'>
         <div className="flex items-center gap-4">
@@ -32,8 +33,10 @@ const Home = () => {
                   <div className="shadow-md aspect-square h-[200px] flex items-end rounded-lg relative">
                     <TopCard 
                       title={genre.name}
-                      imageUrl={"http://localhost:8000" + genre.cover_image}
+                      imageUrl={(process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL) + genre.cover_image}
                       guid={genre.guid}
+                      playTrack={playTrack}
+                      pauseTrack={pauseTrack}
                     />
                   </div>
                 )

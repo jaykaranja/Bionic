@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from .models import Song, Genre, FavoriteSong, Artist, Album
-from .serializers import SongSerializer, GenreSerializer, FavoriteSongSerializer, AlbumSerializer, ArtistSerializer, GenreLookupSerializer
+from .serializers import SongSerializer, GenreSerializer, FavoriteSongSerializer, AlbumSerializer, AlbumListSerializer, ArtistSerializer, GenreLookupSerializer
 from .lookupenums import Lookups
 
 
@@ -46,8 +46,9 @@ def create_genre(request):
 
 @api_view(['POST'])
 def upload_song(request):
-    serializer = SongSerializer(data=request.data)
+    serializer = SongSerializer.Form(data=request.data)
     if serializer.is_valid():
+        serializer.data
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -94,7 +95,6 @@ def get_lookups(request, category):
         serializer = ArtistSerializer(artists, many=True)
         return Response(serializer.data)
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_favorite_songs(request):
@@ -118,3 +118,80 @@ def like_song(request, song_id):
     favorite_song = FavoriteSong.objects.create(user=request.user, song=song)
     serializer = FavoriteSongSerializer(favorite_song)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+def upload_audio(request) -> Response:  
+    if not request.FILES.get('songFile'):
+        return Response({'error': 'No file provided'}, status=400)
+    
+    if not request.POST.get('songName'):
+        return Response({'error': 'No name provided'}, status=400)
+            
+    try:
+        Song.objects.create(
+            artist_id = request.POST.get('artist'),
+            album_id = request.POST.get('album'),
+            genre = Genre.objects.get(guid = request.POST.get('genre')),
+            title= request.POST.get('songName'),
+            audio_file = request.FILES.get('songFile')
+        )
+        return Response({'message': 'File uploaded successfully'})
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+    
+
+@api_view(['POST'])
+def upload_artist(request) -> Response:  
+    if not request.POST.get('artist'):
+        return Response({'error': 'No file provided'}, status=400)
+    
+    try:
+        Artist.objects.create(
+            name = request.POST.get('artist')
+        )
+        return Response({'message': 'File uploaded successfully'})
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+    
+@api_view(['POST'])
+def upload_album(request) -> Response:  
+    if not request.FILES.get('coverImage'):
+        return Response({'error': 'No file provided'}, status=400)
+    
+    if not request.POST.get('album'):
+        return Response({'error': 'No name provided'}, status=400)
+            
+    try:
+        Album.objects.create(
+            title = request.POST.get('album'),
+            artist_id = request.POST.get('artist'),
+            genre = Genre.objects.get(guid = request.POST.get('genre')),
+            cover_image = request.FILES.get('coverImage')
+        )
+        return Response({'message': 'File uploaded successfully'})
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+    
+@api_view(['GET'])
+def get_artists(request):
+    artists = Artist.objects.all()
+    serializer = ArtistSerializer(artists, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_albums(request):
+    albums = Album.objects.all()
+    serializer = AlbumListSerializer(albums, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def album_detail(request, album_id):
+    try:
+        album = Album.objects.select_related('artist', 'genre').prefetch_related('song_set').get(guid=album_id)
+        album_serializer = AlbumListSerializer(album)
+        songs = album.song_set.all()
+        song_serializer = SongSerializer(songs, many=True)
+        return Response({'album': album_serializer.data, 'songs': song_serializer.data})
+    except Album.DoesNotExist:
+        return Response({'error': 'Album does not exist'}, status=404)

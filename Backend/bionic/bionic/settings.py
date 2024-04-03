@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-2sgosf!v2vdnp_-c26flglozvtcz=x9y8$jg%3x!&w_5jaq&!-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bionicmusic.pythonanywhere.com']
+ALLOWED_HOSTS = ['bionicmusic.pythonanywhere.com', 'localhost']
 
 
 # Application definition

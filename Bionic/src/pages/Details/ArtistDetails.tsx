@@ -1,58 +1,69 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { Genre } from '../../types/Genre';
 import { Song } from '../../types/Song';
-import { FaPlay } from 'react-icons/fa';
+import { FaPlay, FaPlus } from 'react-icons/fa';
+import useGetData from '../../apis/useGetData';
+import usePortalView from "../../hooks/usePortalView";
+import ArtistForm from "../../components/Forms/ArtistForm";
+import Modal from '../../components/modals/Modal'
 
-type TParams = {
-    genre_id: string
-}
 
 const ArtistDetails = () => {
-    const { genre_id }:TParams = useParams();
-    const queryClient = useQueryClient()
-    const genrefromcache:Genre[] | undefined = queryClient.getQueryData(["genres", "all"]);
-    const genre = genrefromcache?.find(obj => obj.id === parseInt(genre_id));
-
+    const artists = useGetData({
+      queryKeys: ["artists", "all"],
+      url: "artists/get"
+    })
     
+    const formState = usePortalView()
 
-  return (
-    <div className='flex flex-col gap-6 px-2 w-full'>
-        <div className='flex gap-4 items-end'>
-            <img 
-                src={"http://localhost:8000" + genre?.cover_image}
-                className="h-[200px] w-[200px] rounded-xl shadow-lg"
-            />
-            <div className='flex flex-col gap-4'>
-                <div className='text-gray-300 text-sm font-semibold'>Genre</div>
-                <div className='text-lime text-6xl font-semibold'>{genre?.name}</div>
-            </div>
-        </div>
-        <div className="flex gap-4 gap-x-3 flex-wrap w-full h-full overflow-auto" id="scrollbar">
-            {(genre?.songs?.length ?? 0 > 0) && 
-              genre?.songs.map((song: Song) => 
-                (
-                  <div className="shadow-md w-full px-6 py-4 h-24 flex items-center justify-between rounded-lg relative hover:cursor-pointer hover:bg-bgSecondary hover:shadow-xl transition duration-200 bg-bgSecondary/85">
-                    <div className='flex gap-4'>
-                      <div className="rounded-full flex items-center justify-center shadow-xl p-4 bg-[#0bcbcb] hover:bg-[#0bcbcbb4] transition duration-300">
-                          <FaPlay color="black" size={20}/>
+    return (
+      <div className='flex flex-col gap-6 px-2 w-full overflow-auto relative py-3' id="scrollbar">
+          <div className='flex gap-4 items-end'>
+              {/* <img 
+                  src={(process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL) + artists?.cover_image}
+                  className="h-[200px] w-[200px] rounded-xl shadow-lg"
+              /> */}
+              <div className='flex flex-col gap-4'>
+                  <div className='text-gray-300 text-sm font-semibold'>For you</div>
+                  <div className='text-lime text-6xl font-semibold'>Artists</div>
+              </div>
+          </div>
+          <div className="flex gap-4 gap-x-3 flex-wrap w-full h-full" >
+              {(artists.data?.length ?? 0 > 0) && 
+                artists.data?.map((artist: Song) => 
+                  (
+                    <div className="shadow-md w-full px-6 py-4 h-24 flex items-center justify-between rounded-lg relative hover:cursor-pointer hover:bg-bgSecondary hover:shadow-xl transition duration-200 bg-bgSecondary/85">
+                      <div className='flex gap-4 h-full'>
+                        <div className="h-full flex items-center justify-center shadow-xl">
+                          <img 
+                            src={(process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL) + artist?.cover_image}
+                            className="h-full aspect-square shadow-lg"
+                          />
+                        </div>
+                        <div className='flex flex-col gap-2 justify-center'>
+                          {/* <p className='text-lime'>John Mayer</p> */}
+                          <p className='text-white/65'>{artist.name}</p>
+                        </div>
                       </div>
-                      <div className='flex flex-col gap-2 self-end'>
-                        <p className='text-lime'>John Mayer</p>
-                        <p className='text-white/65'>{song.title}</p>
-                      </div>
+                      <span className='justify-self-end'>
+                        <BsThreeDotsVertical className='text-lime' fontSize={25} />
+                      </span>
                     </div>
-                    <span className='justify-self-end'>
-                      <BsThreeDotsVertical className='text-lime' fontSize={25} />
-                    </span>
-                  </div>
-                )
-                )
-            }
-        </div>
-    </div>
-  )
+                  )
+                  )
+              }
+          </div>
+          <div className="sticky bottom-2 right-12 bg-lime rounded-full self-end w-max p-6" onClick={formState.toggle}>
+            <FaPlus color="black" size={20} />
+          </div>
+          {formState.isOpen && (
+            <Modal>
+              <ArtistForm
+                onClose={formState.toggle}
+              />
+            </Modal>
+          )}
+      </div>
+    )
 }
 
 export default ArtistDetails
